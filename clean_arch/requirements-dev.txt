@@ -1,0 +1,5 @@
+fastapi[standard]
+pytest
+pytest-asyncio
+ruff
+slowapi
