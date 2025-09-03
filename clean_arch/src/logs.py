@@ -22,18 +22,3 @@ def configure_logging(log_level: str = LogLevels.error):
         return
     
     logging.basicConfig(level=log_level)
-
-
-
-def configure_loggings_2(log_levl: str = LogLevels):
-    log_levls = [level.value for level in LogLevels]
-
-    if log_levl not in log_levls:
-        logging.basicConfig(level=LogLevels.error)
-        return
-
-    if log_levl == LogLevels.debug:
-        logging.basicConfig(level=log_levl, format=LOG_FORMAT_DEBUG)
-        return
-
-    logging.basicConfig(level=log_levl)

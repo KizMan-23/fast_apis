@@ -1,5 +1,8 @@
-fastapi[standard]
 pytest
 pytest-asyncio
 ruff
 slowapi
+sqlalchemy
+fastapi
+uvicorn
+python-dotenv
