@@ -1,7 +1,0 @@
-fastapi[standard]
-sqlalchemy
-alembic
-slowapi
-pyjwt
-passlib
-bycrypt

@@ -3,6 +3,4 @@ pytest-asyncio
 ruff
 slowapi
 sqlalchemy
-fastapi
-uvicorn
-python-dotenv
+fastapi[standard]
