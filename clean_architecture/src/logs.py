@@ -1,7 +1,7 @@
 import logging
 from enum import StrEnum
 
-LOG_FORMAT_DEBUG = "%(asctime)s - %(levelname)s - %(funcName)s - %(message)s - %(pathname)s:%(lineno)d "
+LOG_FORMAT_DEBUG = "%(asctime)s - %(levelname)s - %(funcName)s - %(message)s - %(pathname)s:%(lineno)d"
 
 class LogLevels(StrEnum):
     DEBUG = "DEBUG"

@@ -19,9 +19,3 @@ class TodoResponse(TodoBase):
     completed_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
-
-class TodoUpdate(TodoBase):
-    title: Optional[str] = Field(None,max_length=500)
-    description: Optional[str] = Field(None)
-    due_date: Optional[datetime] = Field(None)
-    priority: Optional[PriorityLevel] = Field(None)
