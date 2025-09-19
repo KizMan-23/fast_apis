@@ -1,5 +1,4 @@
 from fastapi import APIRouter, status
-from typing import Annotated
 from uuid import UUID
 from . import model, service
 from src.database.core import DbSession

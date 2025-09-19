@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
-from uuid import UUID, uuid4
+from uuid import UUID
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
 from . import model
 from src.auth.model import TokenData
 from src.entities.todo import Todo

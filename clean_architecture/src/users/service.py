@@ -1,6 +1,5 @@
 from uuid import UUID
 from sqlalchemy.orm import session
-from fastapi import HTTPException
 from . import model
 from src.entities.user import User
 from src.exceptions import UserNotFoundError, InvalidPasswordError, PasswordMismatchError

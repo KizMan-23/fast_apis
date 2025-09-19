@@ -1,7 +1,13 @@
 from fastapi import FastAPI
+from .auth.controller import router as auth_router
+from .users.controller import router as users_router
+from .todos.controller import router as todos_router
+from .logs import configure_logging, LogLevels
+
+
+configure_logging(LogLevels.INFO)
 
 app = FastAPI()
-
-@app.get("/")
-async def read_root():
-    return {"message": "Hello, World"}
+app.include_router(auth_router)
+app.include_router(users_router)
+app.include_router(todos_router)

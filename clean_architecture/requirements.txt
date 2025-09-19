@@ -4,3 +4,6 @@ ruff
 slowapi
 sqlalchemy
 fastapi[standard]
+jwt
+passlib
+bcrypt
