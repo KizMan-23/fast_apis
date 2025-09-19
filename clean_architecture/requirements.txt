@@ -5,5 +5,5 @@ slowapi
 sqlalchemy
 fastapi[standard]
 jwt
-passlib
-bcrypt
+passlib[bcrypt]
+PyMySQL

@@ -4,7 +4,6 @@ from uuid import UUID, uuid4
 from fastapi import Depends
 from passlib.context import CryptContext
 import jwt
-from jwt import PyJWTError
 from sqlalchemy.orm import Session
 from src.entities.user import User
 from . import model
@@ -56,7 +55,7 @@ def verify_token(token: str) -> model.TokenData:
         payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
         user_id: str = payload.get('id')
         return model.TokenData(user_id=user_id)
-    except PyJWTError as e:
+    except Exception as e:
         logging.WARNING(f"Token verification failed: {str(e)}")
         raise AuthenticationError()
 
