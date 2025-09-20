@@ -1,5 +1,4 @@
 from fastapi import APIRouter, status
-from uuid import UUID
 from src.database.core import DbSession
 from . import model, service
 from src.auth.service import CurrentUser
