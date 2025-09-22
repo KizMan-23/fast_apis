@@ -10,9 +10,9 @@ import logging
 def get_user_by_id(db: session, user_id: UUID) -> model.UserResponse:
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
-        logging.WARNING(f"User not Found  with ID: {user_id}")
+        logging.warning(f"User not Found  with ID: {user_id}")
         raise UserNotFoundError(user_id)
-    logging.INFO(f"Successfully retrieved user with ID: {user_id}")
+    logging.info("Successfully retrieved user with ID: {user_id}")
     return user
 
 def change_password(db: session, user_id:UUID, password_change: model.PasswordChange):
@@ -21,12 +21,12 @@ def change_password(db: session, user_id:UUID, password_change: model.PasswordCh
         
         #verify current password
         if not verify_password(password_change.current_password, user.password_hash):
-            logging.WARNING(f"Invalid current password provided for user ID: {user_id}")
+            logging.warning(f"Invalid current password provided for user ID: {user_id}")
             raise InvalidPasswordError
         
         #verify new password match
         if password_change.new_password != password_change.new_password_confirm:
-            logging.WARNING(f"Password mismatch during change attempt for user ID: {user_id}")
+            logging.warning(f"Password mismatch during change attempt for user ID: {user_id}")
             raise PasswordMismatchError
         
         #update password
@@ -34,6 +34,6 @@ def change_password(db: session, user_id:UUID, password_change: model.PasswordCh
         db.commit()
         logging.info(f"Successfully changed password for user ID: {user_id}")
     except Exception as e:
-        logging.ERROR(f"Error during password change for user ID: {user_id}, Error: {str(e)}")
+        logging.error(f"Error during password change for user ID: {user_id}, Error: {str(e)}")
         raise
 

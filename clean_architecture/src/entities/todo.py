@@ -1,7 +1,5 @@
 from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Enum, Integer
 from enum import IntEnum
-from sqlalchemy.orm import Relationship
-import uuid
 from datetime import datetime, timezone
 from ..database.core import Base
 
@@ -17,7 +15,7 @@ class PriorityLevel(IntEnum):
 class Todo(Base):
     __tablename__ = "todos"
 
-    id = Column(Integer, primary_key=True, default=uuid.uuid4, autoincrement=True, nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     title = Column(String(100), nullable=False)
     description = Column(String(255), nullable=False)
@@ -27,10 +25,6 @@ class Todo(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     priority = Column(Enum(PriorityLevel), default=PriorityLevel.NORMAL, nullable=False)
-    
-
-    #Relationship
-    user =  Relationship("User", back_populates='todos')
     
     def __repr__(self):
         return f"<Todo(id={self.id}, title={self.title}, due_date= {self.due_date}, is_completed={self.is_completed})>"

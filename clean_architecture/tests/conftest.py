@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime, timezone
 from uuid import uuid4
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Integer
 from sqlalchemy.orm import sessionmaker
 from src.database.core import Base
 from src.entities.user import User
@@ -16,7 +16,7 @@ def db_session():
     SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
     engine = create_engine(
             url=SQLALCHEMY_DATABASE_URL,
-            connect_args={"chechk_same_thread": False}
+            connect_args={"check_same_thread": False}
     )
 
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -33,30 +33,31 @@ def db_session():
 
 @pytest.fixture(scope="function")
 def test_user():
-    #Create a user with a know password hash
+    # Create a user with a known password hash
     password_hash = get_password_hash("password123")
     return User(
-        id = uuid4(),
-        email = "test@example.com",
-        fisrt_name = "Test",
-		last_name = "User",
-        password_hash = password_hash
+        id=None,
+        email="test@example.com",
+        first_name="Test",  # Fixed typo
+        last_name="User",
+        password_hash=password_hash
     )
 
 @pytest.fixture(scope="function")
 def test_token_data():
-    return TokenData(user_id= str(uuid4()))
+    return TokenData(user_id= "1")
 
 
 @pytest.fixture(scope="function")
-def test_todo(test_token_data):
+def test_todo(test_user):
     return Todo(
-        id = uuid4(),
-        description = "Test Description",
-        is_completed = False,
-        created_at = datetime.now(timezone.utc),
-        user_id = test_token_data.get_uuid()
-	)
+        id=None,
+        title="Test Todo",
+        description="Test Description",
+        is_completed=False,
+        created_at=datetime.now(timezone.utc),
+        user_id = test_user.id
+    )
 
 
 @pytest.fixture(scope="function")
@@ -86,7 +87,7 @@ def auth_headers(client, db_session):
     #Register a test user
     response = client.post(
         "/auth/",
-        json={
+        json ={
             "email": "test.user@example.com",
             "password": "testpassword123",
             "first_name": "Test",
@@ -99,7 +100,7 @@ def auth_headers(client, db_session):
 
     response = client.post(
         "/auth/token",
-        json = {
+        data = {
             "username": "test.user@example.com",
             "password": "testpassword123",
             "grant_type": "password"

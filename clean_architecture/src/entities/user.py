@@ -1,12 +1,10 @@
 from sqlalchemy import Column, String, Integer
-from sqlalchemy.dialects.postgresql import UUID
-import uuid
 from ..database.core import Base
 
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True, default=uuid.uuid4, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String(100), unique=True, nullable=False)
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)

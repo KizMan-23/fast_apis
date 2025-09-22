@@ -4,6 +4,6 @@ ruff
 slowapi
 sqlalchemy
 fastapi[standard]
-jwt
+pyjwt
 passlib[bcrypt]
 PyMySQL

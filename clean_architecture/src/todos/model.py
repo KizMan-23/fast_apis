@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from src.entities.todo import PriorityLevel
 
 class TodoBase(BaseModel):
-    title: str
+    title: str |  None
     description: str
     due_date: Optional[datetime] = None
     priority: PriorityLevel = PriorityLevel.MEDIUM

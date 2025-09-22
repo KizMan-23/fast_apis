@@ -1,10 +1,10 @@
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
-from uuid import UUID, uuid4
 from fastapi import Depends
 from passlib.context import CryptContext
 import jwt
 from sqlalchemy.orm import Session
+from sqlalchemy import Integer
 from src.entities.user import User
 from . import model
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -36,18 +36,18 @@ def authenticate_user(email: str, password: str, db: Session) -> User | bool:
     user = db.query(User).filter(User.email == email).first()
     
     if not user or not verify_password(password, user.password_hash):
-        logging.WARNING(f"Failed authentication attempt for email: {email}")
+        logging.warning(f"Failed authentication attempt for email: {email}")
         return False
     return user
 
 
-def create_access_token(email: str, user_id: UUID, expires_delta: timedelta) -> str:
-    encode = {
+def create_access_token(email: str, user_id: Integer, expires_delta: timedelta) -> str:
+    to_encode = {
         'sub': email,
         'id': str(user_id),
         'exp': datetime.now(timezone.utc) + expires_delta
     }
-    return jwt.encode(encode, SECRET_KEY, ALGORITHM)
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
 def verify_token(token: str) -> model.TokenData:
@@ -55,15 +55,15 @@ def verify_token(token: str) -> model.TokenData:
         payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
         user_id: str = payload.get('id')
         return model.TokenData(user_id=user_id)
-    except Exception as e:
-        logging.WARNING(f"Token verification failed: {str(e)}")
+    except jwt.PyJWKError as e:
+        logging.warning(f"Token verification failed: {str(e)}")
         raise AuthenticationError()
 
 
 def register_user(db: Session, register_user_request: model.RegisterUserRequest) -> None:
     try:
         create_user_model = User(
-            id = uuid4,
+            id = None,
             email = register_user_request.email,
             first_name = register_user_request.first_name,
             last_name = register_user_request.last_name,
@@ -72,8 +72,10 @@ def register_user(db: Session, register_user_request: model.RegisterUserRequest)
 
         db.add(create_user_model)
         db.commit()
+        db.refresh(create_user_model)
+        logging.info(f"User registered successfully: {register_user_request.email}")
     except Exception as e:
-        logging.ERROR(f"Failed to register user: {register_user_request.email}, Error: {str(e)}")
+        logging.error(f"Failed to register user: {register_user_request.email}, Error: {str(e)}")
         raise
 
 
@@ -85,7 +87,7 @@ CurrentUser = Annotated[model.TokenData, Depends(get_current_user)]
 def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session) -> model.Token:
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
-        logging.ERROR(f"Failed login for access token - Username: {form_data.username }")
+        logging.error(f"Failed login for access token - Username: {form_data.username }")
         raise AuthenticationError
     token = create_access_token(user.email, user.id, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTE))
     return model.Token(access_token=token, token_type='Bearer')

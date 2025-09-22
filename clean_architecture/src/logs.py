@@ -4,10 +4,10 @@ from enum import StrEnum
 LOG_FORMAT_DEBUG = "%(asctime)s - %(levelname)s - %(funcName)s - %(message)s - %(pathname)s:%(lineno)d"
 
 class LogLevels(StrEnum):
-    DEBUG = "DEBUG"
-    INFO = "INFO"
-    WARNING = "WARNING"
-    ERROR = "ERROR"
+    debug = "DEBUG"
+    info = "INFO"
+    warning = "WARNING"
+    error = "ERROR"
 
 def configure_logging(log_level: LogLevels = LogLevels.INFO):
     log_level = str(log_level).upper()

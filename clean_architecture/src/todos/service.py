@@ -15,16 +15,17 @@ def create_todo(current_user: TokenData, db: Session, todo: model.TodoCreate) ->
         db.add(new_todo)
         db.commit()
         db.refresh(new_todo)
-        logging.INFO(f"Created New Todo for user: {current_user.get_uuid()}")
+
+        logging.info(f"Created New Todo for user: {current_user.get_uuid()}")
         return new_todo
     except Exception as e:
-        logging.ERROR(f"Failed to create todo for user: {current_user.get_uuid()}")
+        logging.error(f"Failed to create todo for user: {current_user.get_uuid()}")
         raise TodoCreationError(str(e))
     
 
 def get_todos(current_user: TokenData, db: Session) -> list[model.TodoResponse]:
     todos = db.query(Todo).filter(Todo.user_id == current_user.get_uuid()).all()
-    logging.INFO(f"Retrieved {len(todos)} todos for user: {current_user.get_uuid()}")
+    logging.info(f"Retrieved {len(todos)} todos for user: {current_user.get_uuid()}")
 
     return todos
 
@@ -32,30 +33,30 @@ def get_todos(current_user: TokenData, db: Session) -> list[model.TodoResponse]:
 def get_todo_by_id(current_user: TokenData, db: Session, todo_id: UUID) -> Todo:
     todo = db.query(Todo).filter(Todo.id == todo_id).filter(Todo.user_id == current_user.get_uuid()).first()
     if not todo:
-        logging.WARNING(f"Todo {todo_id} not for user {current_user.get_uuid()}")
+        logging.warning(f"Todo {todo_id} not for user {current_user.get_uuid()}")
         raise TodoNotFoundError(todo_id)
     
-    logging.INFO(f"Retrieved todo {todo_id} for user {current_user.get_uuid()}")
+    logging.info(f"Retrieved todo {todo_id} for user {current_user.get_uuid()}")
     return todo
 
 def update_todo(current_user: TokenData, db: Session, todo_id: UUID, todo_update: model.TodoCreate) -> Todo:
     update_data = todo_update.model_dump(exclude_unset=True)
     db.query(Todo).filter(Todo.id == todo_id).filter(Todo.user_id == current_user.get_uuid()).update(update_data)
     db.commit()
-    logging.INFO(f"Successfully updated todo {todo_id} for user {current_user.get_uuid()}")
+    logging.info(f"Successfully updated todo {todo_id} for user {current_user.get_uuid()}")
     return get_todo_by_id(current_user, db, todo_id)
 
 def complete_todo(current_user: TokenData, db: Session, todo_id: UUID) -> Todo:
     todo = get_todo_by_id(current_user, db, todo_id)
     if todo.is_completed:
-        logging.DEBUG(f"Todo {todo_id} is already completed")
+        logging.debug(f"Todo {todo_id} is already completed")
         return todo
     todo.is_completed = True
     todo.completed_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(todo)
 
-    logging.INFO(f"Todo {todo_id} marked as completed by user {current_user.get_uuid()}")
+    logging.info(f"Todo {todo_id} marked as completed by user {current_user.get_uuid()}")
     return todo
 
 
@@ -63,5 +64,5 @@ def delete_todo(current_user: TokenData, db: Session, todo_id: UUID) -> None:
     todo = get_todo_by_id(current_user, db, todo_id)
     db.delete(todo)
     db.commit()
-    logging.INFO(f"Todo {todo_id} deleted by user {current_user.get_uuid()}")
+    logging.info(f"Todo {todo_id} deleted by user {current_user.get_uuid()}")
 

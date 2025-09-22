@@ -11,6 +11,7 @@ class TestUsersService:
     def test_get_user_by_id(self, db_session, test_user):
         db_session.add(test_user)
         db_session.commit()
+        db_session.refresh(test_user)
 
         user = users_service.get_user_by_id(db_session, test_user.id)
         assert user is not None
@@ -24,6 +25,7 @@ class TestUsersService:
     def test_change_password(self, db_session, test_user):
         db_session.add(test_user)
         db_session.commit()
+        db_session.refresh(test_user)
 
 
         #Test successful Password Change
@@ -38,6 +40,7 @@ class TestUsersService:
         #Verify the new password works
         updated_user = db_session.query(User).filter_by(id=test_user.id).first()
         assert auth_service.verify_password("newpassword123", updated_user.password_hash)
+        
 
     def test_change_password_invalid_current(self, db_session, test_user):
         db_session.add(test_user)

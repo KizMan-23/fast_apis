@@ -12,7 +12,7 @@ class UserResponse(BaseModel):
 
 class PasswordChange(BaseModel):
     current_password: str
-    new_password: set
+    new_password: str
     new_password_confirm: str
 
 
