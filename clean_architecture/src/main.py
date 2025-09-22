@@ -6,7 +6,7 @@ from .logs import configure_logging, LogLevels
 from .database.core import Base, engine
 
 
-configure_logging(LogLevels.INFO)
+configure_logging(LogLevels.info)
 
 app = FastAPI()
 app.include_router(auth_router)

@@ -16,13 +16,6 @@ class TestTodosService:
         assert new_todo.user_id == test_token_data.get_uuid()
         assert not new_todo.is_completed
 
-    
-    # def test_create_todo_error(self, db_session, test_token_data):
-    #     with pytest.raises(TodoCreationError):
-    #         todo_create = TodoCreate(
-    #             description="Creating Todo without Title"
-    #         )
-    #         todo_service.create_todo(test_token_data, db_session, todo_create)
 
     def test_get_todos(self, db_session, test_token_data, test_todo):
         test_todo.user_id = test_token_data.get_uuid()

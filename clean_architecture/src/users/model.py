@@ -1,10 +1,8 @@
 from pydantic import BaseModel, EmailStr
-from uuid import UUID
-from datetime import datetime
 
 
 class UserResponse(BaseModel):
-    id: UUID
+    id: int
     email: EmailStr
     first_name: str
     last_name: str

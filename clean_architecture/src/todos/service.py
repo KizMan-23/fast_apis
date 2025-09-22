@@ -39,10 +39,11 @@ def get_todo_by_id(current_user: TokenData, db: Session, todo_id: UUID) -> Todo:
     logging.info(f"Retrieved todo {todo_id} for user {current_user.get_uuid()}")
     return todo
 
-def update_todo(current_user: TokenData, db: Session, todo_id: UUID, todo_update: model.TodoCreate) -> Todo:
+def update_todo(current_user: TokenData, db: Session, todo_id: UUID, todo_update: model.TodoUpdate) -> Todo:
     update_data = todo_update.model_dump(exclude_unset=True)
     db.query(Todo).filter(Todo.id == todo_id).filter(Todo.user_id == current_user.get_uuid()).update(update_data)
     db.commit()
+    
     logging.info(f"Successfully updated todo {todo_id} for user {current_user.get_uuid()}")
     return get_todo_by_id(current_user, db, todo_id)
 
